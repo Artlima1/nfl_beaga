@@ -53,6 +53,6 @@ for comment in comments:
 
 # Store data
 df = pd.DataFrame.from_dict(bets, orient='index')
-filepath = Path('data/bets_w{}.csv'.format(shortcode = sys.argv[2]))  
+filepath = Path('data/bets_w{}.csv'.format(sys.argv[2]))  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 df.to_csv(filepath)

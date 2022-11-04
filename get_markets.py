@@ -43,6 +43,6 @@ for odds in enumerate(data):
   markets[team]['o/u'] = ou
 
 df = pd.DataFrame.from_dict(markets, orient='index')
-filepath = Path('data/odds_w{}.csv'.format(shortcode = sys.argv[2]))  
+filepath = Path('data/odds_w{}.csv'.format(sys.argv[1]))  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 df.to_csv(filepath)
