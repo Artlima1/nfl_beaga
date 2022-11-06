@@ -37,11 +37,36 @@ comment_id = comments[0]['id']
 response = rq.get('https://graph.facebook.com/v15.0/{}?fields=text,username&access_token={}'.format(comment_id, access_token))
 data = json.loads(response.text)
 
+# Helper vars
+teams = [
+  'broncos', 'ravens', 'panthers', 'bears',
+  'dolphins', 'cardinals', 'raiders', 'patriots',
+  'steelers', 'titans', 'commanders', '49ers',
+  'giants', 'packers', 'bengals', 'jaguars',
+  'buccaneers', 'falcons', 'cowboys', 'lions',
+  'vikings', 'saints', 'jets', 'eagles',
+  'texans', 'colts', 'rams', 'seahawks',
+  'bills', 'browns', 'chargers', 'chiefs',
+]
+
+synonims = {
+  'bucs' : 'buccaneers',
+  'niners': '49ers',
+  'pats': 'patriots',
+  'cards': 'cardinals',
+  'jags': 'jaguars',
+}
+
 # Set the bets dict
 bets = {}
 for comment in comments:
   username = comment['username']
-  user_bets = comment['text'].split()
+  user_bets = comment['text'].replace(",", "")
+  user_bets = user_bets.replace(" e", "")
+  user_bets = user_bets.split()
+  for i in range(0, len(user_bets)):
+    if user_bets[i] not in teams:
+      user_bets[i] = synonims[user_bets[i]]
   bets[username] = {}
   bets[username]['spread-lock'] = user_bets[0]
   bets[username]['spread-normal'] = user_bets[1]

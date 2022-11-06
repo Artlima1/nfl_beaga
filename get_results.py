@@ -4,11 +4,12 @@ import pandas as pd
 from pathlib import Path 
 import sys
 
+# Get week results from NFL
 api_key = 'c06d462a00a745a3845c0e331a30b5f5'
-
 response = rq.get('https://api.sportsdata.io/v3/nfl/scores/json/ScoresByWeek/2022REG/{}?key={}'.format(sys.argv[1], api_key))
 games = json.loads(response.text)
 
+# Table for short name of each team
 short_to_full_table = {
   'DEN': 'Broncos',
   'BAL': 'Ravens',
@@ -44,10 +45,11 @@ short_to_full_table = {
   'KC': 'Chiefs',
 }
 
+# Build the results dict from data
 results = {}
 for game in enumerate(games) :
-  home_team = short_to_full_table[game[1]['HomeTeam']]
-  away_team = short_to_full_table[game[1]['AwayTeam']]
+  home_team = short_to_full_table[game[1]['HomeTeam']].lower()
+  away_team = short_to_full_table[game[1]['AwayTeam']].lower()
   home_score = game[1]['HomeScore']
   away_score = game[1]['AwayScore']
 
@@ -61,6 +63,7 @@ for game in enumerate(games) :
   results[away_team]['opp_score'] = home_score
   results[away_team]['w'] = home_score < away_score
 
+# Store results for later use
 df = pd.DataFrame.from_dict(results, orient='index')
 df.head()
 filepath = Path('data/results_w{}.csv'.format(sys.argv[1]))  

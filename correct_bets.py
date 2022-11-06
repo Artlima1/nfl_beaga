@@ -19,7 +19,7 @@ df = df.rename(columns={"Unnamed: 0": "team"})
 df = df.set_index('team')
 results = df.to_dict(orient='index')
 
-#Correct data
+# Correct bets
 for bettor in bets:
   
   bets[bettor]['result'] = 0
@@ -100,6 +100,7 @@ ordered_scores = dict(sorted(bets.items(), key = lambda bettor: bettor[1]["resul
 for bettor in ordered_scores:
   print(bettor, ordered_scores[bettor]['result'])
 
+# Save Weekly Results
 df = pd.DataFrame.from_dict(ordered_scores, orient='index')
 filepath = Path('data/scores_w{}.csv'.format(sys.argv[1]))  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
