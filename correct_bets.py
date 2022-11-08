@@ -14,7 +14,7 @@ df = df.rename(columns={"Unnamed: 0": "market"})
 df = df.set_index('market')
 markets = df.to_dict(orient='index')
 
-df = pd.read_csv('data/odds_w{}.csv'.format(sys.argv[1]))
+df = pd.read_csv('data/results_w{}.csv'.format(sys.argv[1]))
 df = df.rename(columns={"Unnamed: 0": "team"})
 df = df.set_index('team')
 results = df.to_dict(orient='index')
@@ -32,16 +32,18 @@ for bettor in bets:
     bets[bettor]['result'] -= 1
     bets[bettor]['spread-lock'] = False
   else:
+    bets[bettor]['result'] += 2
     bets[bettor]['spread-lock'] = True
 
   # spread normal
   team = bets[bettor]['spread-normal']
   result = results[team]['team_score'] - results[team]['opp_score']
   market = markets[team]['spread']
-  if -(result) < market:
+  if -(result) <= market:
     bets[bettor]['result'] += 2
     bets[bettor]['spread-normal'] = True
   else :
+    bets[bettor]['result'] -= 0
     bets[bettor]['spread-normal'] = False
 
   # h2h lock
@@ -51,6 +53,7 @@ for bettor in bets:
     bets[bettor]['result'] -= 2
     bets[bettor]['h2h-lock'] = False
   else :
+    bets[bettor]['result'] += 1
     bets[bettor]['h2h-lock'] = True
 
   # h2h normal
@@ -60,26 +63,29 @@ for bettor in bets:
     bets[bettor]['result'] += 1
     team = bets[bettor]['h2h-normal'] = True
   else :
+    bets[bettor]['result'] -= 0
     team = bets[bettor]['h2h-normal'] = False
 
   # over
   team = bets[bettor]['over']
   result = results[team]['team_score'] + results[team]['opp_score']
   market = markets[team]['o/u']
-  if result > market :
-    bets[bettor]['result'] += 1
+  if result >= market :
+    bets[bettor]['result'] += 2
     bets[bettor]['over'] = True
   else :
+    bets[bettor]['result'] -= 0
     bets[bettor]['over'] = False
 
   # under
   team = bets[bettor]['under']
   result = results[team]['team_score'] + results[team]['opp_score']
   market = markets[team]['o/u']
-  if result < market :
-    bets[bettor]['result'] += 1
+  if result <= market :
+    bets[bettor]['result'] += 2
     team = bets[bettor]['under'] = True
   else:
+    bets[bettor]['result'] -= 0
     team = bets[bettor]['under'] = False
 
   # upset
@@ -88,11 +94,12 @@ for bettor in bets:
   market = markets[team]['spread']
   if result == True :
     if market > 7.5 :  
-      bets[bettor]['result'] += 3
+      bets[bettor]['result'] += 5
     elif market > 4.5 :
-      bets[bettor]['result'] += 2
+      bets[bettor]['result'] += 3
     bets[bettor]['upset'] = True
   else:
+    bets[bettor]['result'] -= 0
     bets[bettor]['upset'] = False
 
 # Print Weekly Results

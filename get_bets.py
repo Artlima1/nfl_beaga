@@ -33,9 +33,16 @@ response = rq.get('https://graph.facebook.com/v15.0/{}/comments?access_token={}'
 comments = json.loads(response.text)['data']
 
 # Get user from comments
-comment_id = comments[0]['id']
-response = rq.get('https://graph.facebook.com/v15.0/{}?fields=text,username&access_token={}'.format(comment_id, access_token))
-data = json.loads(response.text)
+comments_data = [None] * len(comments)
+
+for index, comment in enumerate(comments):
+  response = rq.get('https://graph.facebook.com/v15.0/{}?fields=text,username&access_token={}'.format(comment['id'], access_token))
+  data = json.loads(response.text)
+  new_data = {
+      'username': data['username'],
+      'text': data['text']
+  }
+  comments_data[index] = new_data
 
 # Helper vars
 teams = [
@@ -59,19 +66,20 @@ synonims = {
 
 # Set the bets dict
 bets = {}
-for comment in comments:
+for comment in comments_data:
   username = comment['username']
   user_bets = comment['text'].replace(",", "")
   user_bets = user_bets.replace(" e", "")
+  user_bets = user_bets.lower()
   user_bets = user_bets.split()
   for i in range(0, len(user_bets)):
     if user_bets[i] not in teams:
       user_bets[i] = synonims[user_bets[i]]
   bets[username] = {}
-  bets[username]['spread-lock'] = user_bets[0]
-  bets[username]['spread-normal'] = user_bets[1]
-  bets[username]['h2h-lock'] = user_bets[2]
-  bets[username]['h2h-normal'] = user_bets[3]
+  bets[username]['h2h-lock'] = user_bets[0]
+  bets[username]['h2h-normal'] = user_bets[1]
+  bets[username]['spread-lock'] = user_bets[2]
+  bets[username]['spread-normal'] = user_bets[3]
   bets[username]['over'] = user_bets[4]
   bets[username]['under'] = user_bets[5]
   bets[username]['upset'] = user_bets[6]
