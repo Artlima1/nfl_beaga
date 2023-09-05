@@ -95,7 +95,7 @@ for bettor in bets:
   if result == True :
     if market > 7.5 :  
       bets[bettor]['result'] += 5
-    elif market > 4.5 :
+    elif market >= 4.5 :
       bets[bettor]['result'] += 3
     bets[bettor]['upset'] = True
   else:

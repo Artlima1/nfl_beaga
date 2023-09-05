@@ -86,6 +86,7 @@ for comment in comments_data:
 
 # Store data
 df = pd.DataFrame.from_dict(bets, orient='index')
+print(df)
 filepath = Path('data/bets_w{}.csv'.format(sys.argv[2]))  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 df.to_csv(filepath)

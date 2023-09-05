@@ -3,15 +3,25 @@ import json
 import pandas as pd
 from pathlib import Path
 import sys
+import datetime
 
 # Get odds from API
 api_key = 'a89d34dd107d096cf662e99eab2e29ee'
 response = rq.get('https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={}&bookmakers=fanduel&markets=totals,spreads&oddsFormat=american'.format(api_key))
 data = json.loads(response.text)
 
+# get next sunday date
+today = datetime.date.today()
+sunday = today + datetime.timedelta( (6-today.weekday()) % 7 )
+
 # Build the markets dict from the data
 markets = {}
 for odds in enumerate(data):
+  
+  date = datetime.datetime.strptime(odds[1]["commence_time"], "%Y-%m-%dT%H:%M:%SZ")
+  if not (date.day == sunday.day and date.month == sunday.month):
+    continue
+
   team = odds[1]['home_team'].split()
   team = team[len(team)-1]
   for market in enumerate(odds[1]['bookmakers'][0]['markets']):
@@ -46,6 +56,7 @@ for odds in enumerate(data):
 
 # Save the lines in a file for future use
 df = pd.DataFrame.from_dict(markets, orient='index')
+print(df)
 filepath = Path('data/odds_w{}.csv'.format(sys.argv[1]))  
 filepath.parent.mkdir(parents=True, exist_ok=True)  
 df.to_csv(filepath)

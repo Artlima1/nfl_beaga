@@ -9,6 +9,8 @@ api_key = 'c06d462a00a745a3845c0e331a30b5f5'
 response = rq.get('https://api.sportsdata.io/v3/nfl/scores/json/ScoresByWeek/2022REG/{}?key={}'.format(sys.argv[1], api_key))
 games = json.loads(response.text)
 
+print(response.text)
+
 # Table for short name of each team
 short_to_full_table = {
   'DEN': 'Broncos',
@@ -53,15 +55,17 @@ for game in enumerate(games) :
   home_score = game[1]['HomeScore']
   away_score = game[1]['AwayScore']
 
-  results[home_team] = {}
-  results[home_team]['team_score'] = home_score
-  results[home_team]['opp_score'] = away_score
-  results[home_team]['w'] = home_score > away_score
+  results[home_team] = {
+    'team_score': home_score,
+    'opp_score': away_score,
+    'w': home_score > away_score
+  }
 
-  results[away_team] = {}
-  results[away_team]['team_score'] = away_score
-  results[away_team]['opp_score'] = home_score
-  results[away_team]['w'] = home_score < away_score
+  results[away_team] = {
+    'team_score': away_score,
+    'opp_score': home_score,
+    'w': home_score < away_score
+  }
 
 # Store results for later use
 df = pd.DataFrame.from_dict(results, orient='index')
