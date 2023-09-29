@@ -11,17 +11,16 @@ response = rq.get('https://api.the-odds-api.com/v4/sports/americanfootball_nfl/o
 data = json.loads(response.text)
 
 # get next sunday date
-today = datetime.date.today()
-sunday = today + datetime.timedelta( (6-today.weekday()) % 7 )
+today = datetime.datetime.now()
 
 # Build the markets dict from the data
 markets = {}
 for odds in enumerate(data):
   
   date = datetime.datetime.strptime(odds[1]["commence_time"], "%Y-%m-%dT%H:%M:%SZ")
-  if not (date.day == sunday.day and date.month == sunday.month):
+  if ((date -today).days > 4):
     continue
-
+  
   team = odds[1]['home_team'].split()
   team = team[len(team)-1]
   for market in enumerate(odds[1]['bookmakers'][0]['markets']):

@@ -11,7 +11,7 @@ colts,5.0,46.5
 jaguars,-5.0,46.5
 vikings,-5.5,45.5
 buccaneers,5.5,45.5
-saints,3.0,41.5
+saints,-3.0,41.5
 titans,3.0,41.5
 steelers,2.5,41.5
 49ers,-2.5,41.5
@@ -19,9 +19,9 @@ bears,-1.5,41.5
 packers,1.5,41.5
 broncos,-3.5,44.0
 raiders,3.5,44.0
-chargers,3.0,50.5
+chargers,-3.0,50.5
 dolphins,3.0,50.5
 seahawks,-4.5,46.5
-rams,-4.5,46.5
-patriots,-4.0,45.0
+rams,4.5,46.5
+patriots,4.0,45.0
 eagles,-4.0,45.0
